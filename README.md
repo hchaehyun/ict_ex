@@ -3,6 +3,6 @@
 ### ict_intership 진행 중 공부하게 된 코드
 
 1주차<br>
-GO, GCP 공부
+Docker, MySQL, GO, GCP 공부
 
 
