@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'provider_model.dart'; // Make sure this is the correct path to your provider model.
+import 'provider_model.dart'; // provider model import
 
 void main() => runApp(MyApp());
 
@@ -24,64 +24,57 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? selectedOption;
+
   @override
   Widget build(BuildContext context) {
+    var textScaleProvider = Provider.of<TextScaleProvider>(context);
+
     return Scaffold(
       body: SafeArea(
-        child: Consumer<TextScaleProvider>(
-          builder: (context, provider, child) {
-            var textScaleFactor = provider.textScaleFactor;
-            var _selectedOption = provider.selectedOption;
-
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ToggleButtons(
               children: <Widget>[
-                ListTile(
-                  title: const Text('작게'),
-                  leading: Radio<String>(
-                    value: 'small',
-                    groupValue: _selectedOption,
-                    onChanged: (value) {
-                      provider.setTextScaleFromOption(value!);
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('보통'),
-                  leading: Radio<String>(
-                    value: 'medium',
-                    groupValue: _selectedOption,
-                    onChanged: (value) {
-                      provider.setTextScaleFromOption(value!);
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text('크게'),
-                  leading: Radio<String>(
-                    value: 'large',
-                    groupValue: _selectedOption,
-                    onChanged: (value) {
-                      provider.setTextScaleFromOption(value!);
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '텍스트 예시',
-                        style: TextStyle(fontSize: 20 * textScaleFactor),
-                      ),
-                      SizedBox(height: 20),
-                      Text('현재 선택: $_selectedOption'),
-                    ],
-                  ),
-                ),
+                Text('작게'),
+                Text('보통'),
+                Text('크게'),
               ],
-            );
-          },
+              isSelected: [
+                selectedOption == 'small',
+                selectedOption == 'medium',
+                selectedOption == 'large',
+              ],
+              onPressed: (int index) {
+                String newlySelectedOption;
+                switch (index) {
+                  case 0:
+                    newlySelectedOption = 'small';
+                    break;
+                  case 1:
+                    newlySelectedOption = 'medium';
+                    break;
+                  case 2:
+                    newlySelectedOption = 'large';
+                    break;
+                  default:
+                    newlySelectedOption = 'small'; // 기본값 설정
+                    break;
+                }
+                setState(() {
+                  selectedOption = newlySelectedOption;
+                });
+                textScaleProvider.setTextScaleFromOption(newlySelectedOption);
+              },
+            ),
+            Expanded(
+              child: Text(
+                '텍스트 예시',
+                style: TextStyle(fontSize: 20 * textScaleProvider.textScaleFactor),
+              ),
+            ),
+          ],
         ),
       ),
     );
